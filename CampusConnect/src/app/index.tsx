@@ -1,98 +1,104 @@
-import * as Device from 'expo-device';
-import { Platform, StyleSheet } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
+import { SafeAreaView, StyleSheet, Text, View } from 'react-native';
 
-import { AnimatedIcon } from '@/components/animated-icon';
-import { HintRow } from '@/components/hint-row';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { WebBadge } from '@/components/web-badge';
-import { BottomTabInset, MaxContentWidth, Spacing } from '@/constants/theme';
-
-function getDevMenuHint() {
-  if (Platform.OS === 'web') {
-    return <ThemedText type="small">use browser devtools</ThemedText>;
-  }
-  if (Device.isDevice) {
-    return (
-      <ThemedText type="small">
-        shake device or press <ThemedText type="code">m</ThemedText> in terminal
-      </ThemedText>
-    );
-  }
-  const shortcut = Platform.OS === 'android' ? 'cmd+m (or ctrl+m)' : 'cmd+d';
-  return (
-    <ThemedText type="small">
-      press <ThemedText type="code">{shortcut}</ThemedText>
-    </ThemedText>
-  );
-}
+const announcements = [
+  { title: 'Enrollment reminders', isRead: false },
+  { title: 'Campus event schedule', isRead: true },
+];
 
 export default function HomeScreen() {
+  const unreadAnnouncements = announcements.filter((announcement) => !announcement.isRead);
+
   return (
-    <ThemedView style={styles.container}>
+    <View style={styles.container}>
       <SafeAreaView style={styles.safeArea}>
-        <ThemedView style={styles.heroSection}>
-          <AnimatedIcon />
-          <ThemedText type="title" style={styles.title}>
-            Welcome to&nbsp;Expo
-          </ThemedText>
-        </ThemedView>
+        <View style={styles.content}>
+          <View style={styles.header}>
+            <Text style={styles.title}>Campus Connect</Text>
+            <Text style={styles.subtitle}>
+              One campus. Connected students.
+              {'\n'}
+              Welcome to the Week 1 project foundation.
+            </Text>
+          </View>
 
-        <ThemedText type="code" style={styles.code}>
-          get started
-        </ThemedText>
-
-        <ThemedView type="backgroundElement" style={styles.stepContainer}>
-          <HintRow
-            title="Try editing"
-            hint={<ThemedText type="code">src/app/index.tsx</ThemedText>}
-          />
-          <HintRow title="Dev tools" hint={getDevMenuHint()} />
-          <HintRow
-            title="Fresh start"
-            hint={<ThemedText type="code">npm run reset-project</ThemedText>}
-          />
-        </ThemedView>
-
-        {Platform.OS === 'web' && <WebBadge />}
+          <View style={styles.announcementCard}>
+            <Text style={styles.cardTitle}>Announcement Utility Test</Text>
+            <View style={styles.announcementSummary}>
+              <Text style={styles.summaryText}>Total Announcements: {announcements.length}</Text>
+              <Text style={styles.summaryText}>
+                Unread Announcements: {unreadAnnouncements.length}
+              </Text>
+              {unreadAnnouncements.map((announcement) => (
+                <Text key={announcement.title} style={styles.summaryText}>
+                  {'\u2022'} {announcement.title}
+                </Text>
+              ))}
+            </View>
+          </View>
+        </View>
       </SafeAreaView>
-    </ThemedView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    justifyContent: 'center',
     flexDirection: 'row',
+    justifyContent: 'center',
+    backgroundColor: '#F3F6FB',
   },
   safeArea: {
     flex: 1,
-    paddingHorizontal: Spacing.four,
-    alignItems: 'center',
-    gap: Spacing.three,
-    paddingBottom: BottomTabInset + Spacing.three,
-    maxWidth: MaxContentWidth,
-  },
-  heroSection: {
-    alignItems: 'center',
+    width: '100%',
+    paddingHorizontal: 30,
     justifyContent: 'center',
-    flex: 1,
-    paddingHorizontal: Spacing.four,
-    gap: Spacing.four,
+  },
+  content: {
+    alignItems: 'center',
+    gap: 38,
+    transform: [{ translateY: 48 }],
+  },
+  header: {
+    alignItems: 'center',
+    gap: 18,
   },
   title: {
+    color: '#111111',
+    fontSize: 40,
+    fontWeight: '700',
+    lineHeight: 48,
     textAlign: 'center',
   },
-  code: {
-    textTransform: 'uppercase',
+  subtitle: {
+    color: '#222222',
+    fontSize: 20,
+    fontWeight: '400',
+    lineHeight: 28,
+    textAlign: 'center',
   },
-  stepContainer: {
-    gap: Spacing.three,
-    alignSelf: 'stretch',
-    paddingHorizontal: Spacing.three,
-    paddingVertical: Spacing.four,
-    borderRadius: Spacing.four,
+  announcementCard: {
+    alignSelf: 'center',
+    width: '100%',
+    maxWidth: 560,
+    paddingHorizontal: 30,
+    paddingVertical: 30,
+    borderRadius: 16,
+    backgroundColor: '#FFFFFF',
+  },
+  cardTitle: {
+    color: '#111111',
+    fontSize: 26,
+    fontWeight: '700',
+    lineHeight: 32,
+  },
+  announcementSummary: {
+    marginTop: 18,
+  },
+  summaryText: {
+    color: '#222222',
+    fontSize: 20,
+    fontWeight: '400',
+    lineHeight: 29,
   },
 });
