@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
 import AnnouncementCard from '@/components/AnnouncementCard';
@@ -33,15 +33,6 @@ const initialAnnouncements: AnnouncementItem[] = [
 
 export default function AnnouncementPanel() {
   const [announcements, setAnnouncements] = useState(initialAnnouncements);
-  const [connectionStatus, setConnectionStatus] = useState('Checking announcements...');
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setConnectionStatus('Campus announcements are ready.');
-    }, 250);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const unreadCount = announcements.filter((announcement) => !announcement.read).length;
 
@@ -55,9 +46,10 @@ export default function AnnouncementPanel() {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Campus Announcements</Text>
+      <Text accessibilityRole="header" style={styles.heading}>
+        Campus Announcements
+      </Text>
       <Text style={styles.counter}>Unread announcements: {unreadCount}</Text>
-      <Text style={styles.connectionStatus}>{connectionStatus}</Text>
       {announcements.map((announcement) => (
         <AnnouncementCard
           key={announcement.id}
@@ -76,22 +68,17 @@ const styles = StyleSheet.create({
     width: '100%',
     maxWidth: 560,
     alignSelf: 'center',
-    marginTop: 24,
+    marginTop: 14,
   },
   heading: {
     color: '#111111',
-    fontSize: 21,
+    fontSize: 17,
     fontWeight: '700',
-    marginBottom: 10,
   },
   counter: {
     color: '#2563EB',
-    fontSize: 15,
+    fontSize: 12,
     fontWeight: '600',
-  },
-  connectionStatus: {
-    color: '#555555',
-    fontSize: 13,
     marginTop: 4,
   },
 });
